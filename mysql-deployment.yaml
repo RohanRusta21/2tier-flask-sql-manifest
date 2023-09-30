@@ -31,4 +31,4 @@ spec:
             value: admin
           - name: MYSQL_DB
             value: mydb
-        command: ['sh', '-c', 'echo "CREATE TABLE messages (id INT AUTO_INCREMENT PRIMARY KEY, message TEXT);" | mysql -h mysql -u root --password=$MYSQL_ROOT_PASSWORD $MYSQL_DB']
+        command: ['sh', '-c', 'mysql -u root --password=$MYSQL_ROOT_PASSWORD $MYSQL_DB -e "CREATE TABLE messages (id INT AUTO_INCREMENT PRIMARY KEY, message TEXT);"']
