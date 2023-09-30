@@ -19,20 +19,20 @@ spec:
         env:
           - name: MYSQL_ROOT_PASSWORD
             value: admin
-          - name: MYSQL_DB
+          - name: MYSQL_DATABASE
             value: mydb
         ports:
           - containerPort: 3306
-      initContainers:
-      - name: init-mysql
-        image: mysql:5.7
-        env:
-          - name: MYSQL_ROOT_PASSWORD
-            value: admin
-          - name: MYSQL_DB
-            value: mydb
         command:
-        - sh
-        - c
-        - |
-          mysql -u root -p admin -e 'show databases;'
+          - "/bin/sh"
+          - "-c"
+          - >
+            |
+            /usr/bin/mysqld --initialize-insecure --user=mysql &&
+            /usr/bin/mysqld --user=mysql --console &
+            sleep 5 &&
+            mysql -h mysql-service -u root --password=admin mydb -e "CREATE TABLE messages (
+              id INT AUTO_INCREMENT PRIMARY KEY,
+              message TEXT
+            );" &&
+            /usr/bin/mysqladmin shutdown
